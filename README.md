@@ -1,12 +1,23 @@
 # Abbey Starter Kit Quickstart Example
 
 This example shows how to create a single step Grant Kit workflow.
-The example features requesting access to a [Null Resource](https://registry.terraform.io/providers/hashicorp/null/latest).
+The example features requesting access to a [Okta User Group Membership](https://registry.terraform.io/providers/okta/okta/latest/docs/resources/user_group_memberships)
 from multiple reviewers, requiring only `one_of` the reviewers to approve the access.
 
 ## Usage
 
-Visit this [Starter Kit's docs](https://docs.abbey.io/getting-started/quickstart) for a short usage walkthrough.
+- Let's say you have a Okta org, and you would like to assign engineers who are on-call to have access to certain apps.
+- You can assign the apps to a user group `Has nice things`, then set up Abbey Quickstart
+  - Make sure to [configure your GitHub Actions Secrets](https://docs.abbey.io/getting-started/quickstart#add-your-abbey_token) and add `OKTA_API_TOKEN` and `ABBEY_TOKEN`
+- When the user is on call, they can request access to be added to `Has nice things` user group via Abbey. This will create a PR appending the following snippet to `access.tf`:
+  ```hcl
+  resource "okta_user_group_memberships" "has_nice_things__00uSomeOktaUserId" { # replace-me@example.com
+    user_id = "00uSomeOktaUserId"
+    groups = ["00gSomeOktaUserGroupId"]
+  }
+  ```
+- Once approved, the user will be added to the group and will be assigned to all the apps assigend to the group.
+- When the access is revoked, the user will be removed from the `Has nice things` group only
 
 ## :books: Learn More
 

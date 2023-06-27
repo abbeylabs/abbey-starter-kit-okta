@@ -13,14 +13,9 @@ terraform {
       version = "0.1.4"
     }
 
-    null = {
-      source = "hashicorp/null"
-      version = "3.2.1"
-    }
-
-    random = {
-      source = "hashicorp/random"
-      version = "3.4.3"
+    okta = {
+      source  = "okta/okta"
+      version = "~> 4.0.2"
     }
   }
 }
@@ -29,20 +24,16 @@ provider "abbey" {
   # Configuration options
 }
 
-provider "null" {
+provider "okta" {
   # Configuration options
+  org_name  = var.okta_org_name
+  base_url  = var.okta_base_url
 }
 
-provider "random" {
-  # Configuration options
-}
-
-resource "abbey_grant_kit" "null_grant" {
-  name = "Null grant"
+resource "abbey_grant_kit" "okta_group_has_nice_things" {
+  name = "Okta Group: Has Nice Things"
   description = <<-EOT
-    Grants access to a Null Resource.
-    This Grant Kit uses a single-step Grant Workflow that requires only a single reviewer
-    from a list of reviewers to approve access.
+    This resource represents a Okta Group Membership for engineers looking to have nice things.
   EOT
 
   workflow = {
@@ -52,7 +43,7 @@ resource "abbey_grant_kit" "null_grant" {
           # Typically uses your Primary Identity.
           # For this local example, you can pass in an arbitrary string.
           # For more information on what a Primary Identity is, visit https://docs.abbey.io.
-          one_of = ["replace-me@example.com"]
+          one_of = ["replace-me@example.com"] # CHANGEME
         }
       }
     ]
@@ -61,9 +52,11 @@ resource "abbey_grant_kit" "null_grant" {
   output = {
     # Replace with your own path pointing to where you want your access changes to manifest.
     # Path is an RFC 3986 URI, such as `github://{organization}/{repo}/path/to/file.tf`.
-    location = "github://replace-me-with-organization/replace-me-with-repo/access.tf"
+    location = "github://replace-me-with-organization/replace-me-with-repo/access.tf" # CHANGEME
     append = <<-EOT
-      resource "null_resource" "null_grant_${random_pet.random_pet_name.id}" {
+      resource "okta_user_group_memberships" "has_nice_things__{{ .data.system.abbey.secondary_identities.okta.user_id }}" { # {{ .data.system.abbey.abbey_identity }}
+        user_id = "{{ .data.system.abbey.secondary_identities.okta.user_id }}"
+        groups = ["${data.okta_group.has_nice_things.id}"]
       }
     EOT
   }
@@ -76,13 +69,18 @@ resource "abbey_identity" "user_1" {
     abbey = [
       {
         type  = "AuthId"
-        value = "replace-me@example.com"
+        value = "replace-me@example.com" #CHANGEME
+      }
+    ]
+
+    okta = [
+      {
+        user_id = "00uReplaceWithOktaUserId" #CHANGEME
       }
     ]
   })
 }
 
-resource "random_pet" "random_pet_name" {
-  length = 5
-  separator = "_"
+data "okta_group" "has_nice_things" {
+  name = "Has nice things"
 }
