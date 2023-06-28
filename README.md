@@ -1,4 +1,4 @@
-# Abbey Starter Kit Quickstart Example
+# Abbey Starter Kit Okta
 
 This example shows how to create a single step Grant Kit workflow.
 The example features requesting access to a [Okta User Group Membership](https://registry.terraform.io/providers/okta/okta/latest/docs/resources/user_group_memberships)
