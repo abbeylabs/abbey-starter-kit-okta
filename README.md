@@ -6,9 +6,9 @@ from multiple reviewers, requiring only `one_of` the reviewers to approve the ac
 
 ## Usage
 
-- Let's say you have a Okta org, and you would like to assign engineers who are on-call to have access to certain apps.
+- Let's say you have an Okta org, and you would like to assign engineers who are on-call to have access to certain apps.
 - You can assign the apps to a user group `Has nice things`, then set up Abbey Quickstart
-  - Make sure to [configure your GitHub Actions Secrets](https://docs.abbey.io/getting-started/quickstart#add-your-abbey_token) and add `OKTA_API_TOKEN` and `ABBEY_TOKEN`
+  - Make sure to [configure your GitHub Actions Secrets](https://docs.abbey.io/product/deploying-your-grant-kit#step-1-add-your-abbey_token) and add `OKTA_API_TOKEN` and `ABBEY_TOKEN`
 - When the user is on call, they can request access to be added to `Has nice things` user group via Abbey. This will create a PR appending the following snippet to `access.tf`:
   ```hcl
   resource "okta_user_group_memberships" "has_nice_things__00uSomeOktaUserId" { # replace-me@example.com
