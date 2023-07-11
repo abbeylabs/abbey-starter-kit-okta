@@ -1,3 +1,9 @@
+variable "abbey_token" {
+  type = string
+  sensitive = true
+  description = "Abbey API Token"
+}
+
 variable "okta_org_name" {
   type = string
   sensitive = true
