@@ -10,7 +10,7 @@ terraform {
   required_providers {
     abbey = {
       source = "abbeylabs/abbey"
-      version = "0.2.2"
+      version = "0.2.4"
     }
 
     okta = {
@@ -41,9 +41,6 @@ resource "abbey_grant_kit" "okta_group_has_nice_things" {
     steps = [
       {
         reviewers = {
-          # Typically uses your Primary Identity.
-          # For this local example, you can pass in an arbitrary string.
-          # For more information on what a Primary Identity is, visit https://docs.abbey.io.
           one_of = ["replace-me@example.com"] # CHANGEME
         }
       }
@@ -55,8 +52,8 @@ resource "abbey_grant_kit" "okta_group_has_nice_things" {
     # Path is an RFC 3986 URI, such as `github://{organization}/{repo}/path/to/file.tf`.
     location = "github://replace-me-with-organization/replace-me-with-repo/access.tf" # CHANGEME
     append = <<-EOT
-      resource "okta_user_group_memberships" "has_nice_things__{{ .data.system.abbey.secondary_identities.okta.user_id }}" { # {{ .data.system.abbey.abbey_identity }}
-        user_id = "{{ .data.system.abbey.secondary_identities.okta.user_id }}"
+      resource "okta_user_group_memberships" "has_nice_things__{{ .data.system.abbey.identities.okta.user_id }}" { # {{ .data.system.abbey.identities.abbey.email }}
+        user_id = "{{ .data.system.abbey.identities.okta.user_id }}"
         groups = ["${data.okta_group.has_nice_things.id}"]
       }
     EOT
@@ -64,22 +61,13 @@ resource "abbey_grant_kit" "okta_group_has_nice_things" {
 }
 
 resource "abbey_identity" "user_1" {
-  name = "User 1"
-
-  linked = jsonencode({
-    abbey = [
-      {
-        type  = "AuthId"
-        value = "replace-me@example.com" #CHANGEME
-      }
-    ]
-
-    okta = [
-      {
-        user_id = "00uReplaceWithOktaUserId" #CHANGEME
-      }
-    ]
-  })
+  abbey_account = "replace-me@example.com"
+  source = "okta"
+  metadata = jsonencode(
+    {
+      user_id = "00uReplaceWithOktaUserId" #CHANGEME
+    }
+  )
 }
 
 data "okta_group" "has_nice_things" {
