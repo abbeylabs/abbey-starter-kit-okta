@@ -32,7 +32,7 @@ provider "okta" {
 }
 
 resource "abbey_grant_kit" "okta_group_has_nice_things" {
-  name = "Okta Group: Has Nice Things"
+  name = "Okta_Group__Has_Nice_Things"
   description = <<-EOT
     This resource represents a Okta Group Membership for engineers looking to have nice things.
   EOT
