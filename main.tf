@@ -6,10 +6,10 @@ locals {
   policies_path = "${local.project_path}/policies"
 }
 
-resource "abbey_grant_kit" "okta_group_has_nice_things" {
-  name = "Okta_Group__Has_Nice_Things"
+resource "abbey_grant_kit" "okta_group_on_call" {
+  name = "Okta_Group__on_call"
   description = <<-EOT
-    This resource represents a Okta Group Membership for engineers looking to have nice things.
+    This resource represents a Okta Group Membership for engineers on call.
   EOT
 
   workflow = {
@@ -27,12 +27,7 @@ resource "abbey_grant_kit" "okta_group_has_nice_things" {
   ]
 
   output = {
-    location = "${local.project_path}/access.tf"
-    append = <<-EOT
-      resource "okta_user_group_memberships" "has_nice_things__{{ .user.okta.user_id }}" { # {{ .user.email }}
-        user_id = "{{ .user.okta.user_id }}"
-        groups = [data.okta_group.has_nice_things.id]
-      }
-    EOT
+    location = "${local.project_path}/access.tf#okta_group_memberships.on_call.users"
+    append = "{{ .user.okta.user_id }}"
   }
 }
