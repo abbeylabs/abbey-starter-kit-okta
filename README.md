@@ -13,8 +13,8 @@ from multiple reviewers, requiring only `one_of` the reviewers to approve the ac
   ```diff
    resource "okta_group_memberships" "on_call" {
      group_id = "00gSomeOktaUserGroupId"
-  -  users = []
-  +  users = ["00uSomeOktaUserId"]
+  -  users = ["00uSomeOktaUserId1"]
+  +  users = ["00uSomeOktaUserId1", "00uSomeOktaUserId2"]
    }
   ```
 - Once approved, the user will be added to the group and will be assigned to all the apps assigend to the group.
